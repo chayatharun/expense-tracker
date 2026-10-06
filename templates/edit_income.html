@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Income - Expense Tracker{% endblock %}
+
+{% block content %}
+
+<section class="form-page">
+
+    <div class="form-card">
+
+        <div class="form-header">
+            <p class="eyebrow">PERSONAL FINANCE</p>
+
+            <h1>Edit Income</h1>
+
+            <p>
+                Update the details of this income transaction.
+            </p>
+        </div>
+
+        <form method="POST" class="expense-form">
+
+            <div class="form-group">
+
+                <label for="amount">
+                    Amount
+                </label>
+
+                <div class="amount-input">
+
+                    <span>₹</span>
+
+                    <input
+                        type="number"
+                        id="amount"
+                        name="amount"
+                        step="0.01"
+                        min="0.01"
+                        value="{{ income.amount }}"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="category">
+                    Category
+                </label>
+
+                <select
+                    id="category"
+                    name="category_id"
+                    required
+                >
+
+                    <option value="">
+                        Select category
+                    </option>
+
+                    {% for category in categories %}
+
+                        <option
+                            value="{{ category.category_id }}"
+                            {% if category.category_id|string == income.category_id|string %}selected{% endif %}
+                        >
+                            {{ category.name }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <input
+                    type="text"
+                    id="description"
+                    name="description"
+                    value="{{ income.description or '' }}"
+                    placeholder="Example: Monthly salary"
+                >
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="transaction_date">
+                        Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="transaction_date"
+                        name="transaction_date"
+                        value="{{ income.transaction_date }}"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="payment_method">
+                        Payment Method
+                    </label>
+
+                    <select
+                        id="payment_method"
+                        name="payment_method"
+                    >
+
+                        <option value="">
+                            Select method
+                        </option>
+
+                        <option
+                            value="Bank Transfer"
+                            {% if income.payment_method == "Bank Transfer" %}selected{% endif %}
+                        >
+                            Bank Transfer
+                        </option>
+
+                        <option
+                            value="Cash"
+                            {% if income.payment_method == "Cash" %}selected{% endif %}
+                        >
+                            Cash
+                        </option>
+
+                        <option
+                            value="UPI"
+                            {% if income.payment_method == "UPI" %}selected{% endif %}
+                        >
+                            UPI
+                        </option>
+
+                        <option
+                            value="Card"
+                            {% if income.payment_method == "Card" %}selected{% endif %}
+                        >
+                            Card
+                        </option>
+
+                        <option
+                            value="Other"
+                            {% if income.payment_method == "Other" %}selected{% endif %}
+                        >
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('income') }}"
+                    class="secondary-button"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,2070 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+Dashboard - Expense Tracker
+
+{% endblock %}
+
+{% block content %}
+
+<section class="dashboard">
+
+    <!-- HEADER -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <p class="eyebrow">
+
+                PERSONAL FINANCE
+
+            </p>
+
+            <h1>
+
+                Welcome, {{ user_name }} 👋
+
+            </h1>
+
+            <p>
+
+                Here's your financial overview.
+
+            </p>
+
+        </div>
+
+        <div class="dashboard-header-actions">
+
+            <a
+
+                href="/add-income"
+
+                class="secondary-button"
+
+            >
+
+                + Income
+
+            </a>
+
+            <a
+
+                href="/add-expense"
+
+                class="primary-button"
+
+            >
+
+                + Expense
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- TOTAL STATISTICS -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-icon income">
+
+                ↑
+
+            </div>
+
+            <div>
+
+                <p>
+
+                    Total Income
+
+                </p>
+
+                <h2>
+
+                    ₹{{ "%.2f"|format(total_income) }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon expense">
+
+                ↓
+
+            </div>
+
+            <div>
+
+                <p>
+
+                    Total Expenses
+
+                </p>
+
+                <h2>
+
+                    ₹{{ "%.2f"|format(total_expenses) }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+        <div class="stat-card">
+
+            <div class="stat-icon balance">
+
+                ₹
+
+            </div>
+
+            <div>
+
+                <p>
+
+                    Balance
+
+                </p>
+
+                <h2>
+
+                    ₹{{ "%.2f"|format(balance) }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MONTHLY OVERVIEW -->
+
+    <div class="dashboard-grid">
+
+        <!-- THIS MONTH -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h3>
+
+                        This Month
+
+                    </h3>
+
+                    <p>
+
+                        Your current month's activity
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="monthly-stats">
+
+                <div class="monthly-stat">
+
+                    <span>
+
+                        Income
+
+                    </span>
+
+                    <strong class="income-text">
+
+                        ₹{{ "%.2f"|format(monthly_income) }}
+
+                    </strong>
+
+                </div>
+
+                <div class="monthly-stat">
+
+                    <span>
+
+                        Expenses
+
+                    </span>
+
+                    <strong class="expense-text">
+
+                        ₹{{ "%.2f"|format(monthly_expenses) }}
+
+                    </strong>
+
+                </div>
+
+                <div class="monthly-stat">
+
+                    <span>
+
+                        Remaining
+
+                    </span>
+
+                    <strong>
+
+                        ₹{{ "%.2f"|format(
+
+                            monthly_income - monthly_expenses
+
+                        ) }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- BUDGET -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h3>
+
+                        Monthly Budget
+
+                    </h3>
+
+                    <p>
+
+                        Keep your spending under control
+
+                    </p>
+
+                </div>
+
+                <a
+
+                    href="/budget"
+
+                    class="view-all-link"
+
+                >
+
+                    Manage →
+
+                </a>
+
+            </div>
+
+            {% if monthly_budget > 0 %}
+
+                <div class="budget-amounts">
+
+                    <div>
+
+                        <span>
+
+                            Spent
+
+                        </span>
+
+                        <strong>
+
+                            ₹{{ "%.2f"|format(monthly_expenses) }}
+
+                        </strong>
+
+                    </div>
+
+                    <div class="budget-right">
+
+                        <span>
+
+                            Budget
+
+                        </span>
+
+                        <strong>
+
+                            ₹{{ "%.2f"|format(monthly_budget) }}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                <div class="progress-container">
+
+                    <div
+
+                        class="progress-bar"
+
+                        style="--progress: {{ display_percentage }}%;"
+
+                    ></div>
+
+                </div>
+
+                <div class="budget-footer">
+
+                    <span>
+
+                        {{ "%.0f"|format(
+
+                            budget_percentage
+
+                        ) }}% used
+
+                    </span>
+
+                    {% if budget_remaining >= 0 %}
+
+                        <span class="income-text">
+
+                            ₹{{ "%.2f"|format(
+
+                                budget_remaining
+
+                            ) }}
+
+                            remaining
+
+                        </span>
+
+                    {% else %}
+
+                        <span class="expense-text">
+
+                            ₹{{ "%.2f"|format(
+
+                                budget_remaining|abs
+
+                            ) }}
+
+                            over budget
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            {% else %}
+
+                <div class="budget-empty">
+
+                    <div>
+
+                        🎯
+
+                    </div>
+
+                    <p>
+
+                        You haven't set a budget for this month.
+
+                    </p>
+
+                    <a
+
+                        href="/budget"
+
+                        class="primary-button"
+
+                    >
+
+                        Set Monthly Budget
+
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- SPENDING INSIGHTS -->
+
+    <div class="dashboard-card insights-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h3>
+
+                    Spending Insights
+
+                </h3>
+
+                <p>
+
+                    Understand your spending habits
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="insights-grid">
+
+            <!-- HIGHEST CATEGORY -->
+
+            <div class="insight-item">
+
+                <div class="insight-icon">
+
+                    🏆
+
+                </div>
+
+                <div>
+
+                    <span>
+
+                        Highest Category
+
+                    </span>
+
+                    <strong>
+
+                        {{ highest_category }}
+
+                    </strong>
+
+                    {% if highest_category_amount > 0 %}
+
+                        <small>
+
+                            ₹{{ "%.2f"|format(
+
+                                highest_category_amount
+
+                            ) }}
+
+                        </small>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- DAILY AVERAGE -->
+
+            <div class="insight-item">
+
+                <div class="insight-icon">
+
+                    💸
+
+                </div>
+
+                <div>
+
+                    <span>
+
+                        Average Daily Spending
+
+                    </span>
+
+                    <strong>
+
+                        ₹{{ "%.2f"|format(
+
+                            average_daily_spending
+
+                        ) }}
+
+                    </strong>
+
+                    <small>
+
+                        This month
+
+                    </small>
+
+                </div>
+
+            </div>
+
+            <!-- BUDGET STATUS -->
+
+            <div class="insight-item">
+
+                <div class="insight-icon">
+
+                    🎯
+
+                </div>
+
+                <div>
+
+                    <span>
+
+                        Budget Status
+
+                    </span>
+
+                    <strong>
+
+                        {{ budget_status }}
+
+                    </strong>
+
+                    <small>
+
+                        Monthly budget
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- INSIGHT MESSAGE -->
+
+        <div class="insight-message">
+
+            <span>
+
+                💡
+
+            </span>
+
+            <p>
+
+                {{ spending_insight }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- EXPENSE BREAKDOWN -->
+
+    <div class="dashboard-card chart-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h3>
+
+                    Expense Breakdown
+
+                </h3>
+
+                <p>
+
+                    See where your money is going
+
+                </p>
+
+            </div>
+
+        </div>
+
+        {% if category_expenses %}
+
+            <div
+
+                id="expenseData"
+
+                style="display: none;"
+
+            >
+
+                {% for item in category_expenses %}
+
+                    <div
+
+                        class="expense-data-item"
+
+                        data-category="{{ item.category_name }}"
+
+                        data-amount="{{ item.total }}"
+
+                    ></div>
+
+                {% endfor %}
+
+            </div>
+
+            <div class="chart-container">
+
+                <div class="chart-wrapper">
+
+                    <canvas
+
+                        id="expenseCategoryChart"
+
+                    ></canvas>
+
+                </div>
+
+                <div
+
+                    id="chartLegend"
+
+                    class="chart-legend"
+
+                ></div>
+
+            </div>
+
+        {% else %}
+
+            <div class="budget-empty">
+
+                <div>
+
+                    📊
+
+                </div>
+
+                <p>
+
+                    Add expenses to see your spending breakdown.
+
+                </p>
+
+                <a
+
+                    href="/add-expense"
+
+                    class="primary-button"
+
+                >
+
+                    Add Expense
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- MONTHLY TREND -->
+
+    <div class="dashboard-card chart-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h3>
+
+                    Monthly Spending Trend
+
+                </h3>
+
+                <p>
+
+                    Income and expenses over the last 6 months
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="large-chart-wrapper">
+
+            <canvas
+
+                id="monthlyTrendChart"
+
+            ></canvas>
+
+        </div>
+
+    </div>
+
+    <!-- INCOME VS EXPENSES -->
+
+    <div class="dashboard-card chart-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h3>
+
+                    Income vs Expenses
+
+                </h3>
+
+                <p>
+
+                    Compare your financial activity
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="large-chart-wrapper">
+
+            <canvas
+
+                id="incomeExpenseChart"
+
+            ></canvas>
+
+        </div>
+
+    </div>
+
+    <!-- QUICK ACTIONS -->
+
+    <div class="dashboard-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h3>
+
+                    Quick Actions
+
+                </h3>
+
+                <p>
+
+                    Manage your finances
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="quick-actions">
+
+            <a href="/add-expense">
+
+                <span>
+
+                    💸
+
+                </span>
+
+                <strong>
+
+                    Add Expense
+
+                </strong>
+
+                <small>
+
+                    Record your spending
+
+                </small>
+
+            </a>
+
+            <a href="/add-income">
+
+                <span>
+
+                    💰
+
+                </span>
+
+                <strong>
+
+                    Add Income
+
+                </strong>
+
+                <small>
+
+                    Record money received
+
+                </small>
+
+            </a>
+
+            <a href="/budget">
+
+                <span>
+
+                    🎯
+
+                </span>
+
+                <strong>
+
+                    Set Budget
+
+                </strong>
+
+                <small>
+
+                    Control your monthly spending
+
+                </small>
+
+            </a>
+
+            <a href="/expenses">
+
+                <span>
+
+                    📊
+
+                </span>
+
+                <strong>
+
+                    Expense History
+
+                </strong>
+
+                <small>
+
+                    View all transactions
+
+                </small>
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- RECENT INCOME -->
+
+    <div class="dashboard-card recent-card">
+        <div class="card-header">
+            <div>
+                <h3>Recent Income</h3>
+                <p>Your latest income records</p>
+            </div>
+            <a href="{{ url_for('income') }}" class="view-all-link">View all →</a>
+        </div>
+
+        {% if recent_income %}
+            <div class="recent-list">
+                {% for income in recent_income %}
+                    <div class="recent-item">
+                        <div class="recent-left">
+                            <div class="recent-icon">💰</div>
+                            <div>
+                                <strong>
+                                    {% if income.description %}
+                                        {{ income.description }}
+                                    {% else %}
+                                        {{ income.category_name }}
+                                    {% endif %}
+                                </strong>
+                                <small>
+                                    {{ income.category_name }} · {{ income.payment_method }}
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="recent-right">
+                            <strong class="income-text">
+                                + ₹{{ "%.2f"|format(income.amount) }}
+                            </strong>
+                            <small>{{ income.transaction_date }}</small>
+                            <div class="recent-actions">
+                                <a href="{{ url_for('edit_income', transaction_id=income.transaction_id) }}" class="small-action edit-action">Edit</a>
+                                <form method="POST" action="{{ url_for('delete_income', transaction_id=income.transaction_id) }}" onsubmit="return confirm('Delete this income?');">
+                                    <button type="submit" class="small-action delete-action">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div>💰</div>
+                <h3>No income yet</h3>
+                <p>Add your first income to start tracking your finances.</p>
+                <a href="{{ url_for('add_income') }}">Add your first income →</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- RECENT EXPENSES -->
+
+    <div class="dashboard-card recent-card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h3>
+
+                    Recent Expenses
+
+                </h3>
+
+                <p>
+
+                    Your latest spending
+
+                </p>
+
+            </div>
+
+            <a
+
+                href="/expenses"
+
+                class="view-all-link"
+
+            >
+
+                View all →
+
+            </a>
+
+        </div>
+
+        {% if recent_expenses %}
+
+            <div class="recent-list">
+
+                {% for expense in recent_expenses %}
+
+                    <div class="recent-item">
+
+                        <div class="recent-left">
+
+                            <div class="recent-icon">
+
+                                💸
+
+                            </div>
+
+                            <div>
+
+                                <strong>
+
+                                    {% if expense.description %}
+
+                                        {{ expense.description }}
+
+                                    {% else %}
+
+                                        {{ expense.category_name }}
+
+                                    {% endif %}
+
+                                </strong>
+
+                                <small>
+
+                                    {{ expense.category_name }}
+
+                                    ·
+
+                                    {{ expense.payment_method }}
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                        <div class="recent-right">
+
+                            <strong>
+
+                                - ₹{{ "%.2f"|format(
+
+                                    expense.amount
+
+                                ) }}
+
+                            </strong>
+
+                            <small>
+
+                                {{ expense.transaction_date }}
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div>
+
+                    💸
+
+                </div>
+
+                <h3>
+
+                    No expenses yet
+
+                </h3>
+
+                <p>
+
+                    Add your first expense to start tracking your spending.
+
+                </p>
+
+                <a href="/add-expense">
+
+                    Add your first expense →
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+<!-- ==================================================
+
+     CHART DATA
+
+\================================================== -->
+
+<div
+
+    id="monthlyTrendData"
+
+    style="display: none;"
+
+>
+
+    {% for i in range(monthly_trend_labels|length) %}
+
+        <div
+
+            class="trend-data-item"
+
+            data-label="{{ monthly_trend_labels[i] }}"
+
+            data-income="{{ monthly_trend_income[i] }}"
+
+            data-expense="{{ monthly_trend_expenses[i] }}"
+
+        ></div>
+
+    {% endfor %}
+
+</div>
+
+<!-- ==================================================
+
+     DASHBOARD CHART STYLES
+
+\================================================== -->
+
+<style>
+
+.chart-card {
+
+    margin-top: 24px;
+
+}
+
+.chart-container {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 50px;
+
+    padding: 25px 10px 10px;
+
+}
+
+.chart-wrapper {
+
+    width: 320px;
+
+    height: 320px;
+
+    position: relative;
+
+}
+
+.large-chart-wrapper {
+
+    width: 100%;
+
+    height: 320px;
+
+    position: relative;
+
+    padding: 15px 5px 5px;
+
+}
+
+.chart-legend {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    min-width: 200px;
+
+}
+
+.legend-item {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    font-size: 13px;
+
+}
+
+.legend-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+}
+
+.legend-color {
+
+    width: 10px;
+
+    height: 10px;
+
+    border-radius: 50%;
+
+    flex-shrink: 0;
+
+}
+
+.legend-name {
+
+    color: var(--text);
+
+}
+
+.legend-amount {
+
+    color: var(--muted);
+
+    white-space: nowrap;
+
+}
+
+.insights-card {
+
+    margin-top: 24px;
+
+}
+
+.insights-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+
+    margin-top: 10px;
+
+}
+
+.insight-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 18px;
+
+    background: var(--surface-light);
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+}
+
+.insight-icon {
+
+    width: 42px;
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: var(--surface);
+
+    border-radius: 10px;
+
+    font-size: 20px;
+
+    flex-shrink: 0;
+
+}
+
+.insight-item div:last-child {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+}
+
+.insight-item span {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+}
+
+.insight-item strong {
+
+    color: var(--text);
+
+    font-size: 15px;
+
+}
+
+.insight-item small {
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+}
+
+.insight-message {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    margin-top: 18px;
+
+    padding: 16px 18px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    background: var(--surface-light);
+
+}
+
+.insight-message span {
+
+    font-size: 18px;
+
+}
+
+.insight-message p {
+
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+}
+
+@media (max-width: 800px) {
+
+    .insights-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .chart-container {
+
+        flex-direction: column;
+
+        gap: 30px;
+
+    }
+
+    .chart-wrapper {
+
+        width: 280px;
+
+        height: 280px;
+
+    }
+
+    .chart-legend {
+
+        width: 100%;
+
+        min-width: 0;
+
+    }
+
+}
+
+@media (max-width: 550px) {
+
+    .large-chart-wrapper {
+
+        height: 260px;
+
+    }
+
+}
+
+
+.recent-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.recent-actions form {
+    margin: 0;
+}
+
+.small-action {
+    border: 1px solid var(--border);
+    background: var(--surface-light);
+    color: var(--muted);
+    border-radius: 7px;
+    padding: 4px 8px;
+    font-size: 11px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.small-action:hover {
+    color: var(--text);
+    border-color: var(--accent);
+}
+
+.edit-action {
+    color: var(--accent-light);
+}
+
+.delete-action {
+    color: var(--danger);
+}
+
+@media (max-width: 600px) {
+    .recent-item {
+        align-items: flex-start;
+    }
+
+    .recent-right {
+        text-align: right;
+    }
+}
+
+</style>
+
+<!-- ==================================================
+
+     CHART JAVASCRIPT
+
+\================================================== -->
+
+{% if category_expenses %}
+
+<script>
+
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    function () {
+
+        /* ==========================================
+
+           EXPENSE CATEGORY CHART
+
+        ========================================== */
+
+        const expenseCanvas =
+
+            document.getElementById(
+
+                "expenseCategoryChart"
+
+            );
+
+        if (expenseCanvas) {
+
+            const dataItems =
+
+                document.querySelectorAll(
+
+                    ".expense-data-item"
+
+                );
+
+            const labels = [];
+
+            const values = [];
+
+            dataItems.forEach(
+
+                function (item) {
+
+                    labels.push(
+
+                        item.dataset.category
+
+                    );
+
+                    values.push(
+
+                        parseFloat(
+
+                            item.dataset.amount
+
+                        )
+
+                    );
+
+                }
+
+            );
+
+            const colors = [
+
+                "#7c6cff",
+
+                "#62d99a",
+
+                "#ff7070",
+
+                "#f5b942",
+
+                "#4da6ff",
+
+                "#d66cff",
+
+                "#ff8c42",
+
+                "#38d9c5",
+
+                "#ff6b9d",
+
+                "#8c9eff"
+
+            ];
+
+            new Chart(
+
+                expenseCanvas,
+
+                {
+
+                    type: "doughnut",
+
+                    data: {
+
+                        labels: labels,
+
+                        datasets: [
+
+                            {
+
+                                data: values,
+
+                                backgroundColor: colors,
+
+                                borderColor: "#111318",
+
+                                borderWidth: 3,
+
+                                hoverOffset: 8
+
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        cutout: "65%",
+
+                        plugins: {
+
+                            legend: {
+
+                                display: false
+
+                            },
+
+                            tooltip: {
+
+                                callbacks: {
+
+                                    label: function (
+
+                                        context
+
+                                    ) {
+
+                                        return (
+
+                                            " ₹" +
+
+                                            Number(
+
+                                                context.raw
+
+                                            ).toLocaleString(
+
+                                                "en-IN",
+
+                                                {
+
+                                                    minimumFractionDigits: 2,
+
+                                                    maximumFractionDigits: 2
+
+                                                }
+
+                                            )
+
+                                        );
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            );
+
+            const legend =
+
+                document.getElementById(
+
+                    "chartLegend"
+
+                );
+
+            if (legend) {
+
+                labels.forEach(
+
+                    function (
+
+                        label,
+
+                        index
+
+                    ) {
+
+                        const item =
+
+                            document.createElement(
+
+                                "div"
+
+                            );
+
+                        item.className =
+
+                            "legend-item";
+
+                        const left =
+
+                            document.createElement(
+
+                                "div"
+
+                            );
+
+                        left.className =
+
+                            "legend-left";
+
+                        const color =
+
+                            document.createElement(
+
+                                "span"
+
+                            );
+
+                        color.className =
+
+                            "legend-color";
+
+                        color.style.backgroundColor =
+
+                            colors[
+
+                                index % colors.length
+
+                            ];
+
+                        const name =
+
+                            document.createElement(
+
+                                "span"
+
+                            );
+
+                        name.className =
+
+                            "legend-name";
+
+                        name.textContent =
+
+                            label;
+
+                        left.appendChild(
+
+                            color
+
+                        );
+
+                        left.appendChild(
+
+                            name
+
+                        );
+
+                        const amount =
+
+                            document.createElement(
+
+                                "span"
+
+                            );
+
+                        amount.className =
+
+                            "legend-amount";
+
+                        amount.textContent =
+
+                            "₹" +
+
+                            Number(
+
+                                values[index]
+
+                            ).toLocaleString(
+
+                                "en-IN",
+
+                                {
+
+                                    minimumFractionDigits: 2,
+
+                                    maximumFractionDigits: 2
+
+                                }
+
+                            );
+
+                        item.appendChild(
+
+                            left
+
+                        );
+
+                        item.appendChild(
+
+                            amount
+
+                        );
+
+                        legend.appendChild(
+
+                            item
+
+                        );
+
+                    }
+
+                );
+
+            }
+
+        }
+
+        /* ==========================================
+
+           MONTHLY TREND DATA
+
+        ========================================== */
+
+        const trendItems =
+
+            document.querySelectorAll(
+
+                ".trend-data-item"
+
+            );
+
+        const trendLabels = [];
+
+        const trendIncome = [];
+
+        const trendExpenses = [];
+
+        trendItems.forEach(
+
+            function (item) {
+
+                trendLabels.push(
+
+                    item.dataset.label
+
+                );
+
+                trendIncome.push(
+
+                    parseFloat(
+
+                        item.dataset.income
+
+                    )
+
+                );
+
+                trendExpenses.push(
+
+                    parseFloat(
+
+                        item.dataset.expense
+
+                    )
+
+                );
+
+            }
+
+        );
+
+        /* ==========================================
+
+           MONTHLY SPENDING TREND
+
+        ========================================== */
+
+        const trendCanvas =
+
+            document.getElementById(
+
+                "monthlyTrendChart"
+
+            );
+
+        if (trendCanvas) {
+
+            new Chart(
+
+                trendCanvas,
+
+                {
+
+                    type: "bar",
+
+                    data: {
+
+                        labels: trendLabels,
+
+                        datasets: [
+
+                            {
+
+                                label: "Expenses",
+
+                                data: trendExpenses,
+
+                                backgroundColor:
+
+                                    "#ff7070",
+
+                                borderRadius: 6
+
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        plugins: {
+
+                            legend: {
+
+                                display: true
+
+                            }
+
+                        },
+
+                        scales: {
+
+                            y: {
+
+                                beginAtZero: true,
+
+                                ticks: {
+
+                                    callback:
+
+                                        function (value) {
+
+                                            return "₹" +
+
+                                                Number(
+
+                                                    value
+
+                                                ).toLocaleString(
+
+                                                    "en-IN"
+
+                                                );
+
+                                        }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            );
+
+        }
+
+        /* ==========================================
+
+           INCOME VS EXPENSES
+
+        ========================================== */
+
+        const comparisonCanvas =
+
+            document.getElementById(
+
+                "incomeExpenseChart"
+
+            );
+
+        if (comparisonCanvas) {
+
+            new Chart(
+
+                comparisonCanvas,
+
+                {
+
+                    type: "line",
+
+                    data: {
+
+                        labels: trendLabels,
+
+                        datasets: [
+
+                            {
+
+                                label: "Income",
+
+                                data: trendIncome,
+
+                                borderColor:
+
+                                    "#62d99a",
+
+                                backgroundColor:
+
+                                    "rgba(98, 217, 154, 0.12)",
+
+                                tension: 0.35,
+
+                                fill: true,
+
+                                pointRadius: 4
+
+                            },
+
+                            {
+
+                                label: "Expenses",
+
+                                data: trendExpenses,
+
+                                borderColor:
+
+                                    "#ff7070",
+
+                                backgroundColor:
+
+                                    "rgba(255, 112, 112, 0.12)",
+
+                                tension: 0.35,
+
+                                fill: true,
+
+                                pointRadius: 4
+
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        plugins: {
+
+                            legend: {
+
+                                display: true
+
+                            }
+
+                        },
+
+                        scales: {
+
+                            y: {
+
+                                beginAtZero: true,
+
+                                ticks: {
+
+                                    callback:
+
+                                        function (value) {
+
+                                            return "₹" +
+
+                                                Number(
+
+                                                    value
+
+                                                ).toLocaleString(
+
+                                                    "en-IN"
+
+                                                );
+
+                                        }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            );
+
+        }
+
+    }
+
+);
+
+</script>
+
+{% endif %}
+
+{% endblock %}

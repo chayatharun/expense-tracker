@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}
+Monthly Budget - Expense Tracker
+{% endblock %}
+
+
+{% block content %}
+
+<section class="form-page">
+
+    <div class="form-card">
+
+        <div class="form-header">
+
+            <p class="eyebrow">
+                BUDGET
+            </p>
+
+            <h1>
+                Monthly Budget
+            </h1>
+
+            <p>
+                Set how much you want to spend each month.
+            </p>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="expense-form"
+        >
+
+            <div class="form-group">
+
+                <label for="amount">
+                    Monthly Budget
+                </label>
+
+                <div class="amount-input">
+
+                    <span>
+                        ₹
+                    </span>
+
+                    <input
+                        type="number"
+                        id="amount"
+                        name="amount"
+                        step="0.01"
+                        min="0.01"
+                        placeholder="20000"
+                        value="{% if current_budget %}{{ current_budget.amount }}{% endif %}"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label for="month">
+                        Month
+                    </label>
+
+                    <select
+                        id="month"
+                        name="month"
+                        required
+                    >
+
+                        <option
+                            value="1"
+                            {% if current_month == 1 %}selected{% endif %}
+                        >
+                            January
+                        </option>
+
+                        <option
+                            value="2"
+                            {% if current_month == 2 %}selected{% endif %}
+                        >
+                            February
+                        </option>
+
+                        <option
+                            value="3"
+                            {% if current_month == 3 %}selected{% endif %}
+                        >
+                            March
+                        </option>
+
+                        <option
+                            value="4"
+                            {% if current_month == 4 %}selected{% endif %}
+                        >
+                            April
+                        </option>
+
+                        <option
+                            value="5"
+                            {% if current_month == 5 %}selected{% endif %}
+                        >
+                            May
+                        </option>
+
+                        <option
+                            value="6"
+                            {% if current_month == 6 %}selected{% endif %}
+                        >
+                            June
+                        </option>
+
+                        <option
+                            value="7"
+                            {% if current_month == 7 %}selected{% endif %}
+                        >
+                            July
+                        </option>
+
+                        <option
+                            value="8"
+                            {% if current_month == 8 %}selected{% endif %}
+                        >
+                            August
+                        </option>
+
+                        <option
+                            value="9"
+                            {% if current_month == 9 %}selected{% endif %}
+                        >
+                            September
+                        </option>
+
+                        <option
+                            value="10"
+                            {% if current_month == 10 %}selected{% endif %}
+                        >
+                            October
+                        </option>
+
+                        <option
+                            value="11"
+                            {% if current_month == 11 %}selected{% endif %}
+                        >
+                            November
+                        </option>
+
+                        <option
+                            value="12"
+                            {% if current_month == 12 %}selected{% endif %}
+                        >
+                            December
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="year">
+                        Year
+                    </label>
+
+                    <input
+                        type="number"
+                        id="year"
+                        name="year"
+                        value="{{ current_year }}"
+                        min="2020"
+                        max="2100"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="/dashboard"
+                    class="secondary-button"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+                    Save Budget
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}
